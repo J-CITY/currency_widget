@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Currency Widget';
+  String get appTitle => 'CurrencyRate';
 
   @override
   String get ratesTitle => 'Currency Rates';
@@ -73,6 +73,21 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String settingsSavedHours(int hours) {
+    return 'Settings saved. Interval: $hours hr.';
+  }
+
+  @override
+  String updateInBackgroundHours(int hours) {
+    return 'Rates will be updated in the background every $hours hr.';
+  }
+
+  @override
+  String hoursLabel(int hours) {
+    return '$hours hr.';
+  }
+
+  @override
   String get saveButton => 'Save';
 
   @override
@@ -113,4 +128,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pickColor => 'Pick a color';
+
+  @override
+  String get developer => 'Developer';
+
+  @override
+  String get emailCopied => 'Email copied to clipboard';
 }

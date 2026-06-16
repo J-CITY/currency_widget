@@ -101,7 +101,7 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
-  /// **'Currency Widget'**
+  /// **'CurrencyRate'**
   String get appTitle;
 
   /// No description provided for @ratesTitle.
@@ -206,6 +206,24 @@ abstract class AppLocalizations {
   /// **'{minutes} minutes'**
   String minutesLabel(int minutes);
 
+  /// No description provided for @settingsSavedHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings saved. Interval: {hours} hr.'**
+  String settingsSavedHours(int hours);
+
+  /// No description provided for @updateInBackgroundHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Rates will be updated in the background every {hours} hr.'**
+  String updateInBackgroundHours(int hours);
+
+  /// No description provided for @hoursLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} hr.'**
+  String hoursLabel(int hours);
+
   /// No description provided for @saveButton.
   ///
   /// In en, this message translates to:
@@ -289,6 +307,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pick a color'**
   String get pickColor;
+
+  /// No description provided for @developer.
+  ///
+  /// In en, this message translates to:
+  /// **'Developer'**
+  String get developer;
+
+  /// No description provided for @emailCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Email copied to clipboard'**
+  String get emailCopied;
 }
 
 class _AppLocalizationsDelegate

@@ -9,7 +9,7 @@ class AppLocalizationsRu extends AppLocalizations {
   AppLocalizationsRu([String locale = 'ru']) : super(locale);
 
   @override
-  String get appTitle => 'Курсы валют';
+  String get appTitle => 'CurrencyRate';
 
   @override
   String get ratesTitle => 'Курсы валют';
@@ -74,6 +74,21 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String settingsSavedHours(int hours) {
+    return 'Настройки сохранены. Интервал: $hours ч.';
+  }
+
+  @override
+  String updateInBackgroundHours(int hours) {
+    return 'Курсы будут обновляться в фоне каждые $hours ч.';
+  }
+
+  @override
+  String hoursLabel(int hours) {
+    return '$hours ч.';
+  }
+
+  @override
   String get saveButton => 'Сохранить';
 
   @override
@@ -114,4 +129,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get pickColor => 'Выберите цвет';
+
+  @override
+  String get developer => 'Разработчик';
+
+  @override
+  String get emailCopied => 'Email скопирован в буфер обмена';
 }

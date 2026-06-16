@@ -72,7 +72,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.settingsSaved(minutes))),
+        SnackBar(content: Text(minutes >= 60 && minutes % 60 == 0 
+          ? AppLocalizations.of(context)!.settingsSavedHours(minutes ~/ 60)
+          : AppLocalizations.of(context)!.settingsSaved(minutes))),
       );
       Navigator.pop(context);
     }
@@ -125,7 +127,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    AppLocalizations.of(context)!.updateInBackground(_intervalMinutes),
+                    _intervalMinutes >= 60 && _intervalMinutes % 60 == 0
+                      ? AppLocalizations.of(context)!.updateInBackgroundHours(_intervalMinutes ~/ 60)
+                      : AppLocalizations.of(context)!.updateInBackground(_intervalMinutes),
                     style: TextStyle(color: Colors.grey.shade400),
                   ),
                   const SizedBox(height: 24),
@@ -135,7 +139,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     items: [15, 30, 60, 120, 360, 720, 1440].map((int value) {
                       return DropdownMenuItem<int>(
                         value: value,
-                        child: Text(AppLocalizations.of(context)!.minutesLabel(value)),
+                        child: Text(value >= 60 && value % 60 == 0
+                          ? AppLocalizations.of(context)!.hoursLabel(value ~/ 60)
+                          : AppLocalizations.of(context)!.minutesLabel(value)),
                       );
                     }).toList(),
                     onChanged: (val) {
@@ -203,6 +209,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ElevatedButton(
                     onPressed: _saveSettings,
                     style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
