@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import '../l10n/app_localizations.dart';
 import '../data/local/preferences_service.dart';
@@ -180,6 +181,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ],
 
+                  const SizedBox(height: 32),
+                  Text(
+                    AppLocalizations.of(context)!.developer,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: const Text('Daniil Glushchenko'),
+                    subtitle: const Text('daniil.glushchenko1995@gmail.com'),
+                    trailing: const Icon(Icons.copy, size: 20),
+                    onTap: () {
+                      Clipboard.setData(const ClipboardData(text: 'daniil.glushchenko1995@gmail.com'));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(AppLocalizations.of(context)!.emailCopied)),
+                      );
+                    },
+                  ),
                   const Spacer(),
                   ElevatedButton(
                     onPressed: _saveSettings,

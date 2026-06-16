@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "appTitle": "Currency Widget",
+  "appTitle": "CurrencyRate",
   "ratesTitle": "Currency Rates",
   "add": "Add",
   "noTrackedCurrencies": "No tracked currencies\nPress + to add",
@@ -69,5 +69,7 @@
   "customBgColor": "Background Color",
   "customPrimaryColor": "Primary Text Color",
   "customSecondaryColor": "Secondary Text Color",
-  "pickColor": "Pick a color"
+  "pickColor": "Pick a color",
+  "developer": "Developer",
+  "emailCopied": "Email copied to clipboard"
 }

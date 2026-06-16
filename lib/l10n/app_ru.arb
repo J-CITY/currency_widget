@@ -1,6 +1,6 @@
 {
   "@@locale": "ru",
-  "appTitle": "Курсы валют",
+  "appTitle": "CurrencyRate",
   "ratesTitle": "Курсы валют",
   "add": "Добавить",
   "noTrackedCurrencies": "Нет отслеживаемых валют\nНажмите + чтобы добавить",
@@ -31,5 +31,7 @@
   "customBgColor": "Цвет фона",
   "customPrimaryColor": "Основной текст",
   "customSecondaryColor": "Вторичный текст",
-  "pickColor": "Выберите цвет"
+  "pickColor": "Выберите цвет",
+  "developer": "Разработчик",
+  "emailCopied": "Email скопирован в буфер обмена"
 }
