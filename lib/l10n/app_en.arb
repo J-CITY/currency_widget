@@ -1,0 +1,73 @@
+{
+  "@@locale": "en",
+  "appTitle": "Currency Widget",
+  "ratesTitle": "Currency Rates",
+  "add": "Add",
+  "noTrackedCurrencies": "No tracked currencies\nPress + to add",
+  "apiAndUpdated": "API: {apiName}\nUpdated: {date}",
+  "@apiAndUpdated": {
+    "placeholders": {
+      "apiName": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "enterBothCurrencies": "Enter both currencies",
+  "pairAlreadyTracked": "This pair is already tracked",
+  "saveError": "Save error: {error}",
+  "@saveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "addRateTitle": "Add Rate",
+  "baseCurrencyLabel": "Base Currency (e.g., USD)",
+  "targetCurrencyLabel": "Target Currency (e.g., RUB)",
+  "dataSourceLabel": "Data Source (API)",
+  "savePairButton": "Save Pair",
+  "settingsTitle": "Settings",
+  "settingsSaved": "Settings saved. Interval: {minutes} min.",
+  "@settingsSaved": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "updateFrequency": "Widget Update Frequency",
+  "updateInBackground": "Rates will be updated in the background every {minutes} min.",
+  "@updateInBackground": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "minutesLabel": "{minutes} minutes",
+  "@minutesLabel": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "saveButton": "Save",
+  "edit": "Edit",
+  "delete": "Delete",
+  "rateError": "Error loading rate",
+  "widgetWaitingData": "Waiting for data...",
+  "widgetTheme": "Widget Theme",
+  "themeSystem": "System (Material You)",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "themeCustom": "Custom",
+  "customBgColor": "Background Color",
+  "customPrimaryColor": "Primary Text Color",
+  "customSecondaryColor": "Secondary Text Color",
+  "pickColor": "Pick a color"
+}

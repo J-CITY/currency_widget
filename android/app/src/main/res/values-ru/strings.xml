@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_updating">Обновление...</string>
+    <string name="widget_updated">Обновлено %1$s</string>
+    <string name="widget_updated_empty">Обновлено --:--</string>
+    <string name="widget_title">Курсы валют</string>
+    <string name="widget_empty_message">Ожидание данных...</string>
+</resources>

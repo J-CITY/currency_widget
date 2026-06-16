@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_updating">Updating...</string>
+    <string name="widget_updated">Updated %1$s</string>
+    <string name="widget_updated_empty">Updated --:--</string>
+    <string name="widget_title">Currency Rates</string>
+    <string name="widget_empty_message">Waiting for data...</string>
+</resources>
