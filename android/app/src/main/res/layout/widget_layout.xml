@@ -8,27 +8,28 @@
     android:orientation="vertical">
 
     <!-- Header -->
-    <RelativeLayout
-        android:id="@+id/rl_header"
+    <LinearLayout
+        android:id="@+id/ll_header_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_marginBottom="12dp">
 
         <ImageView
             android:id="@+id/iv_app_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
             android:layout_marginEnd="8dp"
+            android:layout_gravity="center_vertical"
             android:src="@mipmap/launcher_icon" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/ll_header_texts"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_toEndOf="@id/iv_app_icon"
-            android:layout_centerVertical="true">
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tv_title"
@@ -50,16 +51,18 @@
 
         <TextView
             android:id="@+id/btn_refresh"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:text="⟳"
             android:textColor="#FFFFFF"
-            android:textSize="28sp"
-            android:paddingBottom="4dp"
-            android:gravity="center" />
-    </RelativeLayout>
+            android:textSize="32sp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="4dp"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:translationY="-4dp"
+            android:translationX="4dp" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/ll_rates_container"

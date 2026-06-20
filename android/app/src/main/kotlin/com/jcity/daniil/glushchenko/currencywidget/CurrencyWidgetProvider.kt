@@ -1,4 +1,4 @@
-package com.example.currency_widget
+package com.jcity.daniil.glushchenko.currencywidget
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
@@ -19,7 +19,7 @@ import java.util.Locale
 class CurrencyWidgetProvider : HomeWidgetProvider() {
 
     companion object {
-        const val ACTION_REFRESH = "com.example.currency_widget.ACTION_REFRESH"
+        const val ACTION_REFRESH = "com.jcity.daniil.glushchenko.currencywidget.ACTION_REFRESH"
         val AVAILABLE_CURRENCY_ICONS = setOf("RUB", "USD", "CNY", 
             "EUR", "KZT", "JPY",
             "BYN", "UZS", "TRY", 
@@ -88,13 +88,33 @@ class CurrencyWidgetProvider : HomeWidgetProvider() {
         val minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 0)
 
         // Если высота меньше 100dp, считаем это "Высота 1" (обычно 40-70dp)
-        val isSmallHeight = minHeight in 1..99
-        val isNarrow = minWidth in 1..230
+        val isSmallHeight = minHeight < 100
+        val isNarrow = minWidth < 160
+        val isWidth3 = minWidth in 160..280
         val isWide = minWidth > 200
         
         val layoutId = if (isSmallHeight) R.layout.widget_layout_small else R.layout.widget_layout
         
         val views = RemoteViews(context.packageName, layoutId).apply {
+            
+            // Apply visibility rules based on size with explicit fallback for state reuse
+            if (isSmallHeight) {
+                if (isNarrow) {
+                    setViewVisibility(R.id.btn_refresh, android.view.View.GONE)
+                } else {
+                    setViewVisibility(R.id.btn_refresh, android.view.View.VISIBLE)
+                }
+            } else {
+                if (isNarrow) {
+                    setViewVisibility(R.id.ll_header_texts, android.view.View.GONE)
+                    setViewVisibility(R.id.tv_title, android.view.View.GONE)
+                    setViewVisibility(R.id.tv_update_time, android.view.View.GONE)
+                } else {
+                    setViewVisibility(R.id.ll_header_texts, android.view.View.VISIBLE)
+                    setViewVisibility(R.id.tv_title, android.view.View.VISIBLE)
+                    setViewVisibility(R.id.tv_update_time, android.view.View.VISIBLE)
+                }
+            }
             
             val title = widgetData.getString("title", context.getString(R.string.widget_title))
             val emptyMsg = widgetData.getString("empty_message", context.getString(R.string.widget_empty_message))
@@ -173,6 +193,12 @@ class CurrencyWidgetProvider : HomeWidgetProvider() {
                         rowView.setTextColor(R.id.tv_currency_code, primaryTextColor)
                         rowView.setTextColor(R.id.tv_rate, primaryTextColor)
                         
+                        if (!isSmallHeight && isNarrow) {
+                            rowView.setViewVisibility(R.id.tv_currency_code, android.view.View.GONE)
+                        } else {
+                            rowView.setViewVisibility(R.id.tv_currency_code, android.view.View.VISIBLE)
+                        }
+                        
                         if (!isSmallHeight) {
                             if (AVAILABLE_CURRENCY_ICONS.contains(base)) {
                                 val assetPath = "flutter_assets/assets/icon/${base}.png"
@@ -241,6 +267,12 @@ class CurrencyWidgetProvider : HomeWidgetProvider() {
                         }
                         
                         addView(R.id.ll_rates_container, rowView)
+                        
+                        // Add extra padding between items for 1x3 size
+                        if (isSmallHeight && isWidth3 && i < itemsCount - 1) {
+                            val spaceView = RemoteViews(context.packageName, R.layout.widget_space)
+                            addView(R.id.ll_rates_container, spaceView)
+                        }
                     }
                 }
             } catch (e: Exception) {
@@ -269,4 +301,5 @@ class CurrencyWidgetProvider : HomeWidgetProvider() {
         }
         appWidgetManager.updateAppWidget(widgetId, views)
     }
+
 }

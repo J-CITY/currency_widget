@@ -1,4 +1,4 @@
-package com.example.currency_widget
+package com.jcity.daniil.glushchenko.currencywidget
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -14,22 +14,23 @@ class AddPairScreen extends StatefulWidget {
 }
 
 class _AddPairScreenState extends State<AddPairScreen> {
-  final _baseController = TextEditingController();
-  final _targetController = TextEditingController();
+  TextEditingController? _baseFieldController;
+  TextEditingController? _targetFieldController;
   final _repository = CurrencyRepository(PreferencesService());
   final _prefs = PreferencesService();
 
   String _selectedApi = 'fawazahmed0';
   List<String> _apis = [];
   bool _isLoading = false;
+  
+  Map<String, String> _currenciesDict = {};
+  bool _isLoadingDict = false;
 
   @override
   void initState() {
     super.initState();
     _apis = _repository.getAvailableProviders();
     if (widget.pairToEdit != null) {
-      _baseController.text = widget.pairToEdit!.baseCurrency;
-      _targetController.text = widget.pairToEdit!.targetCurrency;
       if (_apis.contains(widget.pairToEdit!.apiName)) {
         _selectedApi = widget.pairToEdit!.apiName;
       } else if (_apis.isNotEmpty) {
@@ -38,11 +39,24 @@ class _AddPairScreenState extends State<AddPairScreen> {
     } else if (_apis.isNotEmpty) {
       _selectedApi = _apis.first;
     }
+    _loadDictionary();
+  }
+
+  Future<void> _loadDictionary() async {
+    setState(() => _isLoadingDict = true);
+    try {
+      final dict = await _repository.fetchAvailableCurrencies(_selectedApi);
+      if (mounted) setState(() => _currenciesDict = dict);
+    } catch (e) {
+      // Игнорируем ошибку словаря, пользователь сможет ввести вручную
+    } finally {
+      if (mounted) setState(() => _isLoadingDict = false);
+    }
   }
 
   Future<void> _savePair() async {
-    final base = _baseController.text.trim().toUpperCase();
-    final target = _targetController.text.trim().toUpperCase();
+    final base = _baseFieldController?.text.trim().toUpperCase() ?? '';
+    final target = _targetFieldController?.text.trim().toUpperCase() ?? '';
 
     if (base.isEmpty || target.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -102,6 +116,71 @@ class _AddPairScreenState extends State<AddPairScreen> {
     }
   }
 
+  Widget _buildAutocomplete(
+    String label, 
+    String? initialValue, 
+    void Function(TextEditingController) onControllerCreated,
+  ) {
+    return Autocomplete<MapEntry<String, String>>(
+      initialValue: TextEditingValue(text: initialValue ?? ''),
+      optionsBuilder: (TextEditingValue textEditingValue) {
+        if (textEditingValue.text.isEmpty) {
+          return const Iterable<MapEntry<String, String>>.empty();
+        }
+        final query = textEditingValue.text.toLowerCase();
+        return _currenciesDict.entries.where((entry) {
+          return entry.key.toLowerCase().contains(query) || 
+                 entry.value.toLowerCase().contains(query);
+        });
+      },
+      displayStringForOption: (MapEntry<String, String> option) => option.key,
+      fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
+        onControllerCreated(controller);
+        return TextField(
+          controller: controller,
+          focusNode: focusNode,
+          decoration: InputDecoration(
+            labelText: label,
+            border: const OutlineInputBorder(),
+            prefixIcon: const Icon(Icons.attach_money),
+            suffixIcon: _isLoadingDict 
+                ? const Padding(
+                    padding: EdgeInsets.all(12.0),
+                    child: SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
+                  ) 
+                : null,
+          ),
+          textCapitalization: TextCapitalization.characters,
+        );
+      },
+      optionsViewBuilder: (context, onSelected, options) {
+        return Align(
+          alignment: Alignment.topLeft,
+          child: Material(
+            elevation: 4.0,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 250, maxWidth: 300),
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                itemCount: options.length,
+                itemBuilder: (context, index) {
+                  final option = options.elementAt(index);
+                  return ListTile(
+                    title: Text(option.key),
+                    subtitle: Text(option.value),
+                    onTap: () => onSelected(option),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,24 +190,16 @@ class _AddPairScreenState extends State<AddPairScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextField(
-              controller: _baseController,
-              decoration: InputDecoration(
-                labelText: AppLocalizations.of(context)!.baseCurrencyLabel,
-                border: const OutlineInputBorder(),
-                prefixIcon: Icon(Icons.attach_money),
-              ),
-              textCapitalization: TextCapitalization.characters,
+            _buildAutocomplete(
+              AppLocalizations.of(context)!.baseCurrencyLabel,
+              widget.pairToEdit?.baseCurrency,
+              (controller) => _baseFieldController = controller,
             ),
             const SizedBox(height: 16),
-            TextField(
-              controller: _targetController,
-              decoration: InputDecoration(
-                labelText: AppLocalizations.of(context)!.targetCurrencyLabel,
-                border: const OutlineInputBorder(),
-                prefixIcon: Icon(Icons.attach_money),
-              ),
-              textCapitalization: TextCapitalization.characters,
+            _buildAutocomplete(
+              AppLocalizations.of(context)!.targetCurrencyLabel,
+              widget.pairToEdit?.targetCurrency,
+              (controller) => _targetFieldController = controller,
             ),
             const SizedBox(height: 24),
             DropdownButtonFormField<String>(
@@ -136,13 +207,19 @@ class _AddPairScreenState extends State<AddPairScreen> {
               decoration: InputDecoration(
                 labelText: AppLocalizations.of(context)!.dataSourceLabel,
                 border: const OutlineInputBorder(),
-                prefixIcon: Icon(Icons.cloud_download),
+                prefixIcon: const Icon(Icons.cloud_download),
               ),
               items: _apis.map((api) {
                 return DropdownMenuItem(value: api, child: Text(api));
               }).toList(),
               onChanged: (val) {
-                if (val != null) setState(() => _selectedApi = val);
+                if (val != null && val != _selectedApi) {
+                  setState(() {
+                    _selectedApi = val;
+                    _currenciesDict.clear();
+                  });
+                  _loadDictionary();
+                }
               },
             ),
             const SizedBox(height: 32),

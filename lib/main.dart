@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'services/background_task.dart';
 import 'ui/home_screen.dart';
+import 'config/features.dart';
 
 import 'package:home_widget/home_widget.dart';
 import 'data/local/preferences_service.dart';
@@ -37,6 +39,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await BackgroundTaskService.initialize();
   HomeWidget.registerBackgroundCallback(backgroundCallback);
+  
+  if (FeatureFlags.enableBannerAds) {
+    await MobileAds.instance.initialize();
+  }
+  
   runApp(const CurrencyWidgetApp());
 }
 

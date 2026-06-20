@@ -50,15 +50,17 @@
 
         <TextView
             android:id="@+id/btn_refresh"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:text="⟳"
             android:textColor="?android:attr/textColorPrimary"
-            android:textSize="28sp"
-            android:paddingBottom="4dp"
-            android:gravity="center" />
+            android:textSize="32sp"
+            android:includeFontPadding="false"
+            android:gravity="center"
+            android:translationY="-4dp"
+            android:translationX="5dp" />
     </RelativeLayout>
 
     <LinearLayout

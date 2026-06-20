@@ -47,18 +47,21 @@
             android:textStyle="bold" />
             
         <TextView
+            android:id="@+id/tv_rate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <TextView
-            android:id="@+id/tv_rate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="91.25 ₽"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:gravity="end|center_vertical"
+            android:maxLines="1"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="10sp"
+            android:autoSizeMaxTextSize="16sp"
+            android:autoSizeStepGranularity="1sp" />
 
         <TextView
             android:id="@+id/tv_diff"

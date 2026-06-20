@@ -3,9 +3,12 @@ import '../l10n/app_localizations.dart';
 import '../data/local/preferences_service.dart';
 import '../data/repositories/currency_repository.dart';
 import '../data/models/currency_rate.dart';
+import '../data/models/currency_pair.dart';
 import 'add_pair_screen.dart';
 import 'settings_screen.dart';
 import '../services/background_task.dart';
+import '../config/features.dart';
+import 'widgets/ad_banner.dart';
 
 const Set<String> _availableCurrencyIcons = {
   'RUB',
@@ -64,6 +67,29 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadRates();
   }
 
+  Future<void> _saveNewOrder() async {
+    final prefs = PreferencesService();
+    final pairs = await prefs.getPairs();
+    
+    final newPairsOrder = <CurrencyPair>[];
+    for (var rate in _rates) {
+      final pairIndex = pairs.indexWhere((p) => p.id == rate.pairId);
+      if (pairIndex != -1) {
+        newPairsOrder.add(pairs[pairIndex]);
+      }
+    }
+    
+    await prefs.savePairs(newPairsOrder);
+    
+    if (mounted) {
+      BackgroundTaskService.updateWidgetData(
+        _rates,
+        title: AppLocalizations.of(context)!.ratesTitle,
+        emptyMessage: AppLocalizations.of(context)!.widgetWaitingData,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,6 +125,9 @@ class _HomeScreenState extends State<HomeScreen> {
         icon: const Icon(Icons.add),
         label: Text(AppLocalizations.of(context)!.add),
       ),
+      bottomNavigationBar: FeatureFlags.enableBannerAds
+          ? const AdBannerWidget()
+          : null,
     );
   }
 
@@ -126,12 +155,23 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildRatesList() {
     return RefreshIndicator(
       onRefresh: _loadRates,
-      child: ListView.builder(
+      child: ReorderableListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: _rates.length,
+        onReorder: (oldIndex, newIndex) {
+          if (newIndex > oldIndex) {
+            newIndex -= 1;
+          }
+          setState(() {
+            final rate = _rates.removeAt(oldIndex);
+            _rates.insert(newIndex, rate);
+          });
+          _saveNewOrder();
+        },
         itemBuilder: (context, index) {
           final rate = _rates[index];
           return Card(
+            key: ValueKey(rate.pairId),
             elevation: 4,
             margin: const EdgeInsets.only(bottom: 12),
             shape: RoundedRectangleBorder(

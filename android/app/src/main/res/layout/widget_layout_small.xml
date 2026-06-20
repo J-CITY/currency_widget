@@ -31,5 +31,9 @@
         android:text="⟳"
         android:textColor="#FFFFFF"
         android:textSize="28sp"
-        android:gravity="center" />
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:includeFontPadding="false" 
+        android:translationY="-4dp"
+        android:translationX="4dp"/>
 </LinearLayout>

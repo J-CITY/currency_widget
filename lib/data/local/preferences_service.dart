@@ -12,6 +12,25 @@ class PreferencesService {
   static const String _customPrimaryTextKey = 'custom_primary_text';
   static const String _customSecondaryTextKey = 'custom_secondary_text';
 
+  String _getDictKey(String apiName) => 'currencies_dict_$apiName';
+
+  Future<void> saveCurrenciesDictionary(String apiName, Map<String, String> dict) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_getDictKey(apiName), jsonEncode(dict));
+  }
+
+  Future<Map<String, String>?> getCurrenciesDictionary(String apiName) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString = prefs.getString(_getDictKey(apiName));
+    if (jsonString == null) return null;
+    try {
+      final decoded = jsonDecode(jsonString) as Map<String, dynamic>;
+      return decoded.map((key, value) => MapEntry(key, value.toString()));
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<void> savePairs(List<CurrencyPair> pairs) async {
     final prefs = await SharedPreferences.getInstance();
     final jsonString = jsonEncode(pairs.map((p) => p.toJson()).toList());

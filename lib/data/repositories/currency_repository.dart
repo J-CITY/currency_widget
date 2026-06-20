@@ -84,4 +84,18 @@ class CurrencyRepository {
     if (provider == null) throw Exception('Provider not found');
     await provider.fetchRate(baseCurrency, targetCurrency);
   }
+
+  Future<Map<String, String>> fetchAvailableCurrencies(String apiName) async {
+    final cached = await _prefsService.getCurrenciesDictionary(apiName);
+    if (cached != null && cached.isNotEmpty) {
+      return cached;
+    }
+
+    final provider = _providers[apiName];
+    if (provider == null) throw Exception('API Provider not found: $apiName');
+
+    final dict = await provider.fetchAvailableCurrencies();
+    await _prefsService.saveCurrenciesDictionary(apiName, dict);
+    return dict;
+  }
 }

@@ -6,4 +6,7 @@ abstract class CurrencyApiProvider {
   
   /// Получает курс для конкретной пары валют
   Future<CurrencyRate> fetchRate(String baseCurrency, String targetCurrency);
+
+  /// Получает список доступных валют (код: название)
+  Future<Map<String, String>> fetchAvailableCurrencies();
 }

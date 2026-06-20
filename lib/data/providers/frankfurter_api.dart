@@ -25,4 +25,15 @@ class FrankfurterApi implements CurrencyApiProvider {
       throw Exception('Failed to load rate from Frankfurter API');
     }
   }
+
+  @override
+  Future<Map<String, String>> fetchAvailableCurrencies() async {
+    final response = await http.get(Uri.parse('https://api.frankfurter.app/currencies'));
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body) as Map<String, dynamic>;
+      return json.map((key, value) => MapEntry(key, value.toString()));
+    } else {
+      throw Exception('Failed to load currencies from Frankfurter');
+    }
+  }
 }

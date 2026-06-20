@@ -43,4 +43,20 @@ class CbrApi implements CurrencyApiProvider {
       throw Exception('Failed to load rate from CBR API');
     }
   }
+
+  @override
+  Future<Map<String, String>> fetchAvailableCurrencies() async {
+    final response = await http.get(Uri.parse('https://www.cbr-xml-daily.ru/daily_json.js'));
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      final valutes = json['Valute'] as Map<String, dynamic>;
+      final map = <String, String>{'RUB': 'Российский рубль'};
+      for (final entry in valutes.entries) {
+        map[entry.key] = entry.value['Name']?.toString() ?? entry.key;
+      }
+      return map;
+    } else {
+      throw Exception('Failed to load currencies from CBR');
+    }
+  }
 }
