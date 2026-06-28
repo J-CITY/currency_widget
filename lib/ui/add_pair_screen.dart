@@ -22,9 +22,8 @@ class _AddPairScreenState extends State<AddPairScreen> {
   String _selectedApi = 'fawazahmed0';
   List<String> _apis = [];
   bool _isLoading = false;
-  
+
   Map<String, String> _currenciesDict = {};
-  bool _isLoadingDict = false;
 
   @override
   void initState() {
@@ -43,14 +42,11 @@ class _AddPairScreenState extends State<AddPairScreen> {
   }
 
   Future<void> _loadDictionary() async {
-    setState(() => _isLoadingDict = true);
     try {
-      final dict = await _repository.fetchAvailableCurrencies(_selectedApi);
+      final dict = await _repository.getCombinedCurrenciesDictionary();
       if (mounted) setState(() => _currenciesDict = dict);
     } catch (e) {
       // Игнорируем ошибку словаря, пользователь сможет ввести вручную
-    } finally {
-      if (mounted) setState(() => _isLoadingDict = false);
     }
   }
 
@@ -117,8 +113,8 @@ class _AddPairScreenState extends State<AddPairScreen> {
   }
 
   Widget _buildAutocomplete(
-    String label, 
-    String? initialValue, 
+    String label,
+    String? initialValue,
     void Function(TextEditingController) onControllerCreated,
   ) {
     return Autocomplete<MapEntry<String, String>>(
@@ -129,8 +125,8 @@ class _AddPairScreenState extends State<AddPairScreen> {
         }
         final query = textEditingValue.text.toLowerCase();
         return _currenciesDict.entries.where((entry) {
-          return entry.key.toLowerCase().contains(query) || 
-                 entry.value.toLowerCase().contains(query);
+          return entry.key.toLowerCase().contains(query) ||
+              entry.value.toLowerCase().contains(query);
         });
       },
       displayStringForOption: (MapEntry<String, String> option) => option.key,
@@ -143,12 +139,6 @@ class _AddPairScreenState extends State<AddPairScreen> {
             labelText: label,
             border: const OutlineInputBorder(),
             prefixIcon: const Icon(Icons.attach_money),
-            suffixIcon: _isLoadingDict 
-                ? const Padding(
-                    padding: EdgeInsets.all(12.0),
-                    child: SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
-                  ) 
-                : null,
           ),
           textCapitalization: TextCapitalization.characters,
         );
@@ -158,7 +148,9 @@ class _AddPairScreenState extends State<AddPairScreen> {
           alignment: Alignment.topLeft,
           child: Material(
             elevation: 4.0,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxHeight: 250, maxWidth: 300),
               child: ListView.builder(
@@ -216,9 +208,7 @@ class _AddPairScreenState extends State<AddPairScreen> {
                 if (val != null && val != _selectedApi) {
                   setState(() {
                     _selectedApi = val;
-                    _currenciesDict.clear();
                   });
-                  _loadDictionary();
                 }
               },
             ),

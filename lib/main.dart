@@ -49,6 +49,10 @@ void main() async {
     await MobileAds.instance.initialize();
   }
   
+  // Фоновая загрузка словарей для автодополнения (не ждем завершения)
+  final repository = CurrencyRepository(PreferencesService());
+  repository.initializeAllDictionaries();
+  
   runApp(const CurrencyWidgetApp());
 }
 

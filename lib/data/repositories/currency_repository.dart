@@ -85,6 +85,34 @@ class CurrencyRepository {
     await provider.fetchRate(baseCurrency, targetCurrency);
   }
 
+  Future<void> initializeAllDictionaries() async {
+    final futures = _providers.values.map((provider) async {
+      try {
+        final dict = await provider.fetchAvailableCurrencies();
+        await _prefsService.saveCurrenciesDictionary(provider.name, dict);
+      } catch (e) {
+        print('Error fetching dictionary for ${provider.name}: $e');
+      }
+    });
+    await Future.wait(futures);
+  }
+
+  Future<Map<String, String>> getCombinedCurrenciesDictionary() async {
+    final combined = <String, Set<String>>{};
+    
+    for (var apiName in _providers.keys) {
+      final dict = await _prefsService.getCurrenciesDictionary(apiName);
+      if (dict != null) {
+        for (var entry in dict.entries) {
+          final key = entry.key.toUpperCase();
+          combined.putIfAbsent(key, () => {}).add(entry.value);
+        }
+      }
+    }
+    
+    return combined.map((key, values) => MapEntry(key, values.join(' / ')));
+  }
+
   Future<Map<String, String>> fetchAvailableCurrencies(String apiName) async {
     final cached = await _prefsService.getCurrenciesDictionary(apiName);
     if (cached != null && cached.isNotEmpty) {
